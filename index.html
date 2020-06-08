@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amazon LivePrice</title>
+    <link rel="stylesheet" href="./assets/css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header id="nav">
+        <p id="title">
+          Amazon <span style="color: red;">Live</span
+          ><span style="color: rgb(185, 255, 223);">Price</span> &nbsp;
+          <span
+            style="font-size: 13px; font-weight: light; font-style: italic;"
+            id="title_version"
+          ></span>
+        </p>
+        <div id="minimize">
+          <img
+            src="./assets/svg/Minimize.svg"
+            alt="minimize_window"
+            srcset=""
+          />
+        </div>
+        <div id="maximize">
+          <img src="./assets/svg/Maximize.svg" alt="" srcset="" />
+        </div>
+        <div id="close">
+          <img src="./assets/svg/Close.svg" alt="close_window" srcset="" />
+        </div>
+      </header>
+      <main class="content">
+        <div class="container" id="topbar">
+          <div class="newproduct">
+            <input
+              type="text"
+              id="product_input"
+              class=""
+              placeholder="Inserisci qui un URL"
+            />
+            <button
+              type="submit"
+              id="product_input_btn"
+              class="product_input_btn"
+            >
+              <img src="./assets/svg/tick.svg" alt="check" srcset="" />
+            </button>
+          </div>
+          <button class="refresh_btn">
+            <img
+              src="./assets/svg/refresh.svg"
+              alt=""
+              srcset=""
+              id="refresh_btn_img"
+            />
+          </button>
+        </div>
+        <div class="container" id="info">
+          <p>
+            Costo Totale: <span id="totalprice">0,00 €&nbsp;&nbsp;&nbsp;</span>
+          </p>
+          <p>Numero di prodotti: <span id="totalproducts">0</span></p>
+        </div>
+
+        <div class="container" id="product_container">
+          <ul id="product_list">
+            <!-- If no products find, show tip for adding a product -->
+            <div class="nothing_div">
+              <p>
+                Nessun articolo<br />
+                <span
+                  >Incolla un link amazon qua sopra per aggiungere un
+                  prodotto</span
+                >
+              </p>
+            </div>
+            <!-- Products -->
+          </ul>
+        </div>
+      </main>
+    </div>
+    <script src="./assets/js/menu.js"></script>
+    <script src="./assets/js/app.js"></script>
+  </body>
+</html>

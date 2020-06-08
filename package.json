@@ -1,0 +1,57 @@
+{
+  "name": "amazonliveprice",
+  "productName": "Amazon LivePrice",
+  "version": "1.0.0",
+  "description": "A live price checker for a list of products",
+  "main": "main.js",
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
+    "path": "^0.12.7",
+    "puppeteer": "^3.3.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.51",
+    "@electron-forge/maker-deb": "^6.0.0-beta.51",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.51",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.51",
+    "@electron-forge/maker-zip": "^6.0.0-beta.51",
+    "electron": "^9.0.0"
+  },
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "author": "Lorenzo Corallo",
+  "license": "ISC",
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "icon": "assets/icon/logo.ico"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "amazonliveprice"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin",
+            "win32"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  }
+}
