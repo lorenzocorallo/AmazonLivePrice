@@ -1,3 +1,6 @@
+/****************************/
+/*  0. Main
+/****************************/
 * {
   margin: 0;
   padding: 0;
@@ -16,12 +19,24 @@ body {
   font-family: "montserratLocal";
   font-weight: 400;
   overflow: hidden;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  height: 100vh;
 }
 
+/****************************/
+/*  1. Navigation
+/****************************/
 #nav {
   background-color: #131313;
-  height: 32px;
-  margin-bottom: 32px;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 1 32px;
+          flex: 0 1 32px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -34,7 +49,7 @@ body {
   -webkit-app-region: drag;
   top: 0;
   width: 100%;
-  position: fixed;
+  z-index: 999;
 }
 
 #nav #title {
@@ -45,9 +60,9 @@ body {
   font-weight: bold;
 }
 
-#minimize,
-#maximize,
-#close {
+#nav #minimize,
+#nav #maximize,
+#nav #close {
   padding: 8px 20px;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
@@ -55,31 +70,102 @@ body {
   cursor: pointer;
 }
 
-#minimize img,
-#maximize img,
-#close img {
+#nav #minimize img,
+#nav #maximize img,
+#nav #close img {
   pointer-events: none;
   width: 12px;
   height: auto;
   fill: #a8a8a8;
 }
 
-#minimize:hover,
-#maximize:hover {
+#nav #minimize:hover,
+#nav #maximize:hover {
   background-color: rgba(61, 61, 61, 0.933);
 }
 
-#close:hover {
+#nav #close:hover {
   background-color: #b90808;
 }
 
+/****************************/
+/*  2. On-Start Screen
+/****************************/
+.initialization {
+  height: 100%;
+  width: 100%;
+  margin-top: 32px;
+  background-color: #1a1a1a;
+  position: absolute;
+  z-index: 10;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.initialization p {
+  opacity: 0;
+  margin-bottom: 10px;
+  -webkit-animation: opacityBounce 1s infinite alternate;
+          animation: opacityBounce 1s infinite alternate;
+}
+
+.initialization span {
+  color: #b4b4b4;
+}
+
+@-webkit-keyframes opacityBounce {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes opacityBounce {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/****************************/
+/*  3. Content
+/****************************/
 main {
-  padding-top: 32px;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
 main #topbar {
-  position: fixed;
-  top: 32px;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 1 90px;
+          flex: 0 1 90px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -199,10 +285,12 @@ main #topbar .refresh_btn img {
 }
 
 main #info {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 1 25px;
+          flex: 0 1 25px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  margin-top: 90px;
   padding: 15px 0;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
@@ -230,6 +318,9 @@ main #info p #totalproducts {
 }
 
 main #product_container {
+  -webkit-box-flex: 3;
+      -ms-flex: 3 1 auto;
+          flex: 3 1 auto;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -239,7 +330,7 @@ main #product_container {
 }
 
 main #product_container #product_list {
-  height: 73vh;
+  height: 100%;
   overflow-y: scroll;
   list-style: none;
   width: 100%;
@@ -344,11 +435,18 @@ main #product_container #product_list .product .product_content .product_name {
   }
 }
 
-main #product_container #product_list .product .product_content .product_image {
+main #product_container #product_list .product .product_content a {
   padding: 15px;
-  font-size: 16px;
-  width: 13%;
-  height: auto;
+  width: 18%;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+main #product_container #product_list .product .product_content a .product_image {
+  pointer-events: none;
+  position: relative;
+  width: 100%;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
   border-radius: 8px;
@@ -387,7 +485,8 @@ main #product_container #product_list .product .product_buttons {
 }
 
 main #product_container #product_list .product .product_buttons .delete_btn,
-main #product_container #product_list .product .product_buttons .check_btn {
+main #product_container #product_list .product .product_buttons .check_btn,
+main #product_container #product_list .product .product_buttons .link_btn {
   float: right;
   border-radius: 8px;
   border: none;
@@ -402,7 +501,8 @@ main #product_container #product_list .product .product_buttons .check_btn {
 }
 
 main #product_container #product_list .product .product_buttons .delete_btn img,
-main #product_container #product_list .product .product_buttons .check_btn img {
+main #product_container #product_list .product .product_buttons .check_btn img,
+main #product_container #product_list .product .product_buttons .link_btn img {
   background: none;
   width: 2.6vw;
   max-width: 35px;
@@ -426,20 +526,24 @@ main #product_container #product_list .product .product_buttons .check_btn:hover
   background-color: #0a8128;
 }
 
+main #product_container #product_list .product .product_buttons .link_btn {
+  background: #272727;
+}
+
+main #product_container #product_list .product .product_buttons .link_btn:hover {
+  background-color: #363636;
+}
+
 .product_checked {
   background: #6ecf7e !important;
   text-decoration: line-through;
   color: #2b2727;
 }
 
-.fadeout {
-  -webkit-animation: fadeout 0.5s;
-          animation: fadeout 0.5s;
-}
-
 .refresh_overlay {
   position: absolute;
   width: 100%;
+  pointer-events: none;
   height: 100%;
   top: 0;
   left: 0;
@@ -459,9 +563,125 @@ main #product_container #product_list .product .product_buttons .check_btn:hover
   background: rgba(0, 0, 0, 0.856);
 }
 
+.popup {
+  padding: 20px 30px;
+  margin: auto;
+  background: #1a1a1a;
+  color: #f4f4f4;
+  border-radius: 8px;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  z-index: 10;
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.788);
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.788);
+}
+
+/****************************/
+/*  4. Footer
+/****************************/
+footer {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 1 45px;
+          flex: 0 1 45px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 5px;
+  background: #131313;
+  font-size: 14px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+footer .left {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 40%;
+          flex: 1 1 40%;
+  -webkit-box-ordinal-group: 2;
+      -ms-flex-order: 1;
+          order: 1;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+footer .right {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 40%;
+          flex: 1 1 40%;
+  -webkit-box-ordinal-group: 100;
+      -ms-flex-order: 99;
+          order: 99;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+footer .right .footer_buttons {
+  margin: 0 10px;
+}
+
+footer .right .footer_buttons button {
+  margin-left: 0 5px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  text-align: center;
+  cursor: pointer;
+  color: #f4f4f4;
+  padding: 10px 15px;
+  background-color: #272727;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+footer .right .footer_buttons button:hover {
+  background-color: #363636;
+}
+
+/****************************/
+/*  5. Animations
+/****************************/
+.fadeout {
+  -webkit-animation: fadeout 0.5s;
+          animation: fadeout 0.5s;
+}
+
 .fadein {
   -webkit-animation: fadein 0.5s;
           animation: fadein 0.5s;
+}
+
+.working {
+  -webkit-animation: workingFade 6.3s ease alternate;
+          animation: workingFade 6.3s ease alternate;
+}
+
+.hidden {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+.rotate {
+  -webkit-animation: rotate infinite 0.8s linear;
+          animation: rotate infinite 0.8s linear;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
 }
 
 @-webkit-keyframes fadeout {
@@ -498,11 +718,6 @@ main #product_container #product_list .product .product_buttons .check_btn:hover
   to {
     opacity: 1;
   }
-}
-
-.working {
-  -webkit-animation: workingFade 6.3s ease alternate;
-          animation: workingFade 6.3s ease alternate;
 }
 
 @-webkit-keyframes workingFade {
@@ -549,19 +764,6 @@ main #product_container #product_list .product .product_buttons .check_btn:hover
     background: #272727;
     color: #c0c0c0;
   }
-}
-
-.hidden {
-  display: none;
-  height: 0;
-  width: 0;
-}
-
-.rotate {
-  -webkit-animation: rotate infinite 0.8s linear;
-          animation: rotate infinite 0.8s linear;
-  -webkit-animation-fill-mode: forwards;
-          animation-fill-mode: forwards;
 }
 
 @-webkit-keyframes rotate {

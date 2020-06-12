@@ -3,7 +3,10 @@
 const dialog = remote.dialog;
 const puppeteer = require("puppeteer");
 const Path = require("path");
+const { shell, clipboard } = require("electron");
 // *
+const main = document.querySelector("MAIN");
+const loadingDiv = document.getElementById("initialization");
 const productInput = document.getElementById("product_input");
 const productList = document.getElementById("product_list");
 const productAdd = document.getElementById("product_input_btn");
@@ -21,10 +24,19 @@ document.getElementById("title_version").innerText = pjson.version;
 // ! Event Listener
 productAdd.addEventListener("click", addProduct);
 productList.addEventListener("click", productEvent);
-document.addEventListener("DOMContentLoaded", getProducts);
+document.addEventListener("DOMContentLoaded", loadDOM);
 refreshBtn.addEventListener("click", refresh);
 
 // ! Functions
+
+async function loadDOM() {
+  loadingDiv.style.opacity = null;
+  await getProducts();
+  await refresh();
+  loadingDiv.style.opacity = 0;
+  loadingDiv.style.display = "none";
+  main.style.opacity = null;
+}
 
 /*
 ? ----------------------------
@@ -59,10 +71,18 @@ async function addProduct(event) {
     const productContentDiv = document.createElement("div");
     productContentDiv.classList.add("product_content");
     productDiv.appendChild(productContentDiv);
+    const productUrl = document.createElement("span");
+    productUrl.innerHTML = pUrl;
+    productUrl.classList.add("hidden", "product_url");
+    productContentDiv.appendChild(productUrl);
     const productImg = document.createElement("img");
     productImg.src = pImgSrc;
     productImg.classList.add("product_image");
-    productContentDiv.appendChild(productImg);
+    const productImgUrl = document.createElement("a");
+    productImgUrl.href = productUrl.innerText;
+    productImgUrl.target = "_blank";
+    productImgUrl.appendChild(productImg);
+    productContentDiv.appendChild(productImgUrl);
     const productName = document.createElement("li");
     productName.innerHTML = pName;
     productName.classList.add("product_name");
@@ -71,10 +91,6 @@ async function addProduct(event) {
     productPrice.innerHTML = pPrice;
     productPrice.classList.add("product_price");
     productContentDiv.appendChild(productPrice);
-    const productUrl = document.createElement("span");
-    productUrl.innerHTML = pUrl;
-    productUrl.classList.add("hidden", "product_url");
-    productContentDiv.appendChild(productUrl);
     // Adding Refresh Overlay
     const refreshOverlay = document.createElement("div");
     refreshOverlay.classList.add("refresh_overlay");
@@ -94,6 +110,10 @@ async function addProduct(event) {
     checkBtn.innerHTML = `<img src="./assets/svg/tick.svg" />`;
     checkBtn.classList.add("check_btn");
     productButtonDiv.appendChild(checkBtn);
+    const linkBtn = document.createElement("button");
+    linkBtn.innerHTML = `<img src="./assets/svg/link.svg" />`;
+    linkBtn.classList.add("link_btn");
+    productButtonDiv.appendChild(linkBtn);
     // Append productDiv to productList
     productList.appendChild(productDiv);
     setTimeout(() => {
@@ -139,10 +159,10 @@ async function productEvent(e) {
     const productContent = product.firstElementChild;
     productContent.classList.toggle("product_checked");
     const products = await checkExistingProducts();
-    const productName = productContent.children[1];
-    const productPrice = productContent.children[2];
-    const productImg = productContent.children[0];
-    const productUrl = productContent.children[3];
+    const productName = productContent.children[2];
+    const productPrice = productContent.children[3];
+    const productImg = productContent.children[1];
+    const productUrl = productContent.children[0];
     const productIndex = {
       name: productName.innerHTML,
       price: productPrice.innerHTML,
@@ -166,6 +186,31 @@ async function productEvent(e) {
     }
     products.splice(products.indexOf(productIndex), 1, productChecked);
     localStorage.setItem("products", JSON.stringify(products));
+  }
+  // COPY
+  if (item.classList[0] == "link_btn") {
+    const product = item.parentElement.parentElement;
+    const productContent = product.firstElementChild;
+    const productUrl = productContent.children[0];
+    clipboard.writeText(productUrl.innerHTML, clipboard);
+    // adding a popup which confirm link copied
+    const copiedPopup = document.createElement("div");
+    copiedPopup.classList.add("popup");
+    copiedPopup.innerText = "Link copiato con successo!";
+    productContent.appendChild(copiedPopup);
+    copiedPopup.opacity = 0;
+    copiedPopup.classList.add("fadein");
+    setTimeout(() => {
+      copiedPopup.style.opacity = 1;
+      copiedPopup.classList.remove("fadein");
+    }, 500);
+    setTimeout(() => {
+      copiedPopup.classList.add("fadeout");
+      copiedPopup.style.opacity = 0;
+    }, 2000);
+    setTimeout(() => {
+      productContent.removeChild(copiedPopup);
+    }, 2500);
   }
 }
 
@@ -199,11 +244,18 @@ async function getProducts() {
       } else if (product.checked == null) {
       }
       productDiv.appendChild(productContentDiv);
-
+      const productUrl = document.createElement("span");
+      productUrl.innerHTML = product.url;
+      productUrl.classList.add("hidden", "product_url");
+      productContentDiv.appendChild(productUrl);
       const productImg = document.createElement("img");
       productImg.src = product.image;
       productImg.classList.add("product_image");
-      productContentDiv.appendChild(productImg);
+      const productImgUrl = document.createElement("a");
+      productImgUrl.href = productUrl.innerText;
+      productImgUrl.target = "_blank";
+      productImgUrl.appendChild(productImg);
+      productContentDiv.appendChild(productImgUrl);
       const productName = document.createElement("li");
       productName.innerHTML = product.name;
       productName.classList.add("product_name");
@@ -212,10 +264,6 @@ async function getProducts() {
       productPrice.innerHTML = product.price;
       productPrice.classList.add("product_price");
       productContentDiv.appendChild(productPrice);
-      const productUrl = document.createElement("span");
-      productUrl.innerHTML = product.url;
-      productUrl.classList.add("hidden", "product_url");
-      productContentDiv.appendChild(productUrl);
       // Adding Refresh Overlay
       const refreshOverlay = document.createElement("div");
       refreshOverlay.classList.add("refresh_overlay");
@@ -235,6 +283,10 @@ async function getProducts() {
       checkBtn.innerHTML = `<img src="./assets/svg/tick.svg" />`;
       checkBtn.classList.add("check_btn");
       productButtonDiv.appendChild(checkBtn);
+      const linkBtn = document.createElement("button");
+      linkBtn.innerHTML = `<img src="./assets/svg/link.svg" />`;
+      linkBtn.classList.add("link_btn");
+      productButtonDiv.appendChild(linkBtn);
       //Append productDiv to productList
       productList.appendChild(productDiv);
       checkTotalPrice();
@@ -255,7 +307,6 @@ async function refresh() {
   startRotate(refreshBtn, 1000, "linear", "infinite");
   addRefreshOverlay();
   await refreshAll();
-  //TODO: FIX
   checkTotalPrice();
   checkTotalProducts();
   stopRotate(refreshBtn);
@@ -272,7 +323,6 @@ async function refreshAll() {
       resolve();
     }
     if (local.length != 0) {
-      // TODO : Add RESOLVE() where code finish to execute
       await changeText(infoPrice, "Aggiornando...", 300);
       const browser = await puppeteer.launch();
       let pChanged = 0;
@@ -286,7 +336,7 @@ async function refreshAll() {
         );
         await page.close();
         const el = retriveProducts()[index];
-        await changeText(el[2], prod.price, 300);
+        await changeText(el[3], prod.price, 300);
         local[index] = prod;
         pChanged++;
         if (pChanged == local.length) {
@@ -299,9 +349,9 @@ async function refreshAll() {
         type: "warning",
         message: "Non ci sono prodotti da aggiornare \n\n",
         title: "Impossibile Aggiornare",
-        icon: Path.Join(),
       });
       console.log(errorURL);
+      resolve();
     }
   });
 }
@@ -309,10 +359,10 @@ async function refreshAll() {
 async function removeProduct(p) {
   const products = await checkExistingProducts();
   const productContent = p.children[0];
-  const productName = productContent.children[1];
-  const productPrice = productContent.children[2];
-  const productImg = productContent.children[0];
-  const productUrl = productContent.children[3];
+  const productName = productContent.children[2];
+  const productPrice = productContent.children[3];
+  const productImg = productContent.children[1];
+  const productUrl = productContent.children[0];
   const productChecked = isChecked(productContent);
   const productIndex = {
     name: productName.innerHTML,
@@ -357,7 +407,7 @@ function calculateTotalPrice() {
     totalPrice = String(totalPrice).replace(".", ",") + " €";
   }
   list.forEach(function (p) {
-    let price = p[2].innerText;
+    let price = p[3].innerText;
     priceNumber = Number(price.replace("€", "").replace(",", ".").trim());
     prices.push(priceNumber);
     pushed++;
@@ -376,11 +426,6 @@ function checkTotalPrice() {
 }
 
 function checkTotalProducts() {
-  // return new Promise(async (resolve, reject) => {
-  //   let products = await checkExistingProducts();
-  //   await changeText(infoProducts, products.length, 300);
-  //   resolve();
-  // });
   const list = retriveProducts();
   changeText(infoProducts, list.length, 300);
   if (list.length == 0) {
@@ -495,41 +540,13 @@ function addRefreshOverlay() {
   for (i = 0; i < refreshOverlay.length; i++) {
     refreshOverlay[i].style.opacity = "1";
   }
-  // const productName = document.querySelectorAll(".product_name");
-  // const productImg = document.querySelectorAll(".product_image");
-  // const productPrice = document.querySelectorAll(".product_price");
-  // const product = {
-  //   name: productName,
-  //   img: productImg,
-  //   price: productPrice,
-  // };
-  // for (ii = 0; i <= productName.length; i++) {
-  //   console.log(product[ii]);
-  //   product.name[ii].style.opacity = 0.2;
-  //   product.price[ii].style.opacity = 0.2;
-  //   product.img[ii].style.opacity = 0.2;
-  // }
 }
-// TODO: FIX SECOND TIME REFRESH
 function removeRefreshOverlay() {
   let i;
   const refreshOverlay = document.querySelectorAll(".refresh_overlay");
   for (i = 0; i < refreshOverlay.length; i++) {
     refreshOverlay[i].style.opacity = "0";
   }
-  // const productName = document.querySelectorAll(".product_name");
-  // const productImg = document.querySelectorAll(".product_image");
-  // const productPrice = document.querySelectorAll(".product_price");
-  // const product = {
-  //   name: productName,
-  //   img: productImg,
-  //   price: productPrice,
-  // };
-  // for (ii = 0; i <= productName.length; i++) {
-  //   product.name[ii].style.opacity = null;
-  //   product.price[ii].style.opacity = null;
-  //   product.img[ii].style.opacity = null;
-  // }
 }
 
 /*
@@ -583,4 +600,31 @@ function startRotate(el, duration, timing, iteration) {
 function stopRotate(el) {
   el.style.animationPlayState = "paused";
   el.disabled = false;
+}
+
+// * Open links in native browser
+if (document.readyState != "complete") {
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+      prepareTags();
+    },
+    false
+  );
+} else {
+  prepareTags();
+}
+
+function prepareTags() {
+  aTags = document.getElementsByTagName("a");
+  for (var i = 0; i < aTags.length; i++) {
+    let href = aTags[i].href;
+    aTags[i].href = "";
+    aTags[i].setAttribute("onclick", "extBrowser('" + href + "')");
+  }
+  return false;
+}
+
+function extBrowser(url) {
+  shell.openExternal(url);
 }

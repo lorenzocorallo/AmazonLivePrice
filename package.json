@@ -1,7 +1,7 @@
 {
   "name": "amazonliveprice",
   "productName": "Amazon LivePrice",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A live price checker for a list of products",
   "main": "main.js",
   "dependencies": {
@@ -30,12 +30,6 @@
         "icon": "assets/icon/logo.ico"
       },
       "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "amazonliveprice"
-          }
-        },
         {
           "name": "@electron-forge/maker-zip",
           "platforms": [

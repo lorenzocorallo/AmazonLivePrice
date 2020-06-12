@@ -1,3 +1,7 @@
+/****************************/
+/*  0. Main
+/****************************/
+
 * {
   margin: 0;
   padding: 0;
@@ -18,54 +22,99 @@ body {
   font-family: "montserratLocal";
   font-weight: 400;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
+
+/****************************/
+/*  1. Navigation
+/****************************/
 
 #nav {
   background-color: #131313;
-  height: 32px;
-  margin-bottom: 32px;
+  flex: 0 1 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   -webkit-app-region: drag;
   top: 0;
   width: 100%;
-  position: fixed;
+  z-index: 999;
   #title {
     flex-grow: 3;
     padding-left: 10px;
     font-weight: bold;
   }
-}
+  #minimize,
+  #maximize,
+  #close {
+    padding: 8px 20px;
+    transition: all 0.3s ease;
+    -webkit-app-region: none;
+    cursor: pointer;
+    img {
+      pointer-events: none;
+      width: 12px;
+      height: auto;
+      fill: #a8a8a8;
+    }
+  }
 
-#minimize,
-#maximize,
-#close {
-  padding: 8px 20px;
-  transition: all 0.3s ease;
-  -webkit-app-region: none;
-  cursor: pointer;
-  img {
-    pointer-events: none;
-    width: 12px;
-    height: auto;
-    fill: #a8a8a8;
+  #minimize:hover,
+  #maximize:hover {
+    background-color: rgba(61, 61, 61, 0.933);
+  }
+  #close:hover {
+    background-color: rgb(185, 8, 8);
   }
 }
 
-#minimize:hover,
-#maximize:hover {
-  background-color: rgba(61, 61, 61, 0.933);
-}
-#close:hover {
-  background-color: rgb(185, 8, 8);
+/****************************/
+/*  2. On-Start Screen
+/****************************/
+
+.initialization {
+  height: 100%;
+  width: 100%;
+  margin-top: 32px;
+  background-color: #1a1a1a;
+  position: absolute;
+  z-index: 10;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  p {
+    opacity: 0;
+    margin-bottom: 10px;
+    animation: opacityBounce 1s infinite alternate;
+  }
+  span {
+    color: #b4b4b4;
+  }
+  @keyframes opacityBounce {
+    0% {
+      opacity: 0.3;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
 }
 
+/****************************/
+/*  3. Content
+/****************************/
+
 main {
-  padding-top: 32px;
+  flex: 1 1 auto;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
   #topbar {
-    position: fixed;
-    top: 32px;
+    flex: 0 1 90px;
     display: flex;
     width: 100%;
     padding: 20px;
@@ -154,8 +203,8 @@ main {
     }
   }
   #info {
+    flex: 0 1 25px;
     display: flex;
-    margin-top: 90px;
     padding: 15px 0;
     justify-content: center;
     align-items: center;
@@ -174,11 +223,11 @@ main {
     }
   }
   #product_container {
+    flex: 3 1 auto;
     display: flex;
     justify-content: center;
-    // height: 95vh;
     #product_list {
-      height: 73vh;
+      height: 100%;
       overflow-y: scroll;
       &::-webkit-scrollbar {
         width: 12px; /* width of the entire scrollbar */
@@ -239,13 +288,18 @@ main {
             }
             flex: 2;
           }
-          .product_image {
+          a {
             padding: 15px;
-            font-size: 16px;
-            width: 13%;
-            height: auto;
+            width: 18%;
             transition: all 0.3s ease;
-            border-radius: 8px;
+            cursor: pointer;
+            .product_image {
+              pointer-events: none;
+              position: relative;
+              width: 100%;
+              transition: all 0.3s ease;
+              border-radius: 8px;
+            }
           }
           .product_price {
             padding: 0rem 2rem;
@@ -264,9 +318,9 @@ main {
           margin-left: 10px;
           min-height: 80px;
           align-items: center;
-          // background-color: #fff;
           .delete_btn,
-          .check_btn {
+          .check_btn,
+          .link_btn {
             float: right;
             border-radius: 8px;
             border: none;
@@ -298,6 +352,12 @@ main {
               background-color: #0a8128;
             }
           }
+          .link_btn {
+            background: #272727;
+            &:hover {
+              background-color: #363636;
+            }
+          }
         }
       }
     }
@@ -310,13 +370,10 @@ main {
   color: #2b2727;
 }
 
-.fadeout {
-  animation: fadeout 0.5s;
-}
-
 .refresh_overlay {
   position: absolute;
   width: 100%;
+  pointer-events: none;
   height: 100%;
   top: 0;
   left: 0;
@@ -329,8 +386,89 @@ main {
   background: rgba(0, 0, 0, 0.856);
 }
 
+.popup {
+  padding: 20px 30px;
+  margin: auto;
+  background: #1a1a1a;
+  color: #f4f4f4;
+  border-radius: 8px;
+  transition: all 0.5s ease;
+  z-index: 10;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.788);
+}
+
+/****************************/
+/*  4. Footer
+/****************************/
+
+footer {
+  flex: 0 1 45px;
+  display: flex;
+  padding: 5px;
+  background: #131313;
+  font-size: 14px;
+  align-items: center;
+  justify-content: space-between;
+  .left {
+    flex: 1 1 40%;
+    order: 1;
+    align-items: center;
+  }
+  .right {
+    flex: 1 1 40%;
+    order: 99;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    .footer_buttons {
+      margin: 0 10px;
+      button {
+        margin-left: 0 5px;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        text-align: center;
+        cursor: pointer;
+        color: #f4f4f4;
+        padding: 10px 15px;
+        background-color: #272727;
+        transition: all 0.3s ease;
+        &:hover {
+          background-color: #363636;
+        }
+      }
+    }
+  }
+}
+
+/****************************/
+/*  5. Animations
+/****************************/
+
+.fadeout {
+  animation: fadeout 0.5s;
+}
+
 .fadein {
   animation: fadein 0.5s;
+}
+
+.working {
+  animation: workingFade 6.3s ease alternate;
+}
+
+.hidden {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+.rotate {
+  animation: rotate infinite 0.8s linear;
+  animation-fill-mode: forwards;
 }
 
 @keyframes fadeout {
@@ -349,10 +487,6 @@ main {
   to {
     opacity: 1;
   }
-}
-
-.working {
-  animation: workingFade 6.3s ease alternate;
 }
 
 @keyframes workingFade {
@@ -378,21 +512,7 @@ main {
   }
 }
 
-.hidden {
-  display: none;
-  height: 0;
-  width: 0;
-}
-
-.rotate {
-  animation: rotate infinite 0.8s linear;
-  animation-fill-mode: forwards;
-}
-
 @keyframes rotate {
-  // 0% {
-  //   transform: rotate(0deg);
-  // }
   to {
     transform: rotate(-360deg);
   }

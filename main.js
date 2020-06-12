@@ -1,5 +1,5 @@
 const electron = require("electron");
-const { app, BrowserWindow, globalShortcut } = require("electron");
+const { app, BrowserWindow, globalShortcut, shell } = require("electron");
 
 function createWindow() {
   let win = new BrowserWindow({
@@ -14,6 +14,10 @@ function createWindow() {
   win.on("closed", () => {
     win = null;
   });
+  win.webContents.on("new-window", function (event, url) {
+    event.preventDefault();
+  });
+
   // win.webContents.openDevTools();
   globalShortcut.register("f5", function () {
     // do nothing
